@@ -35,7 +35,7 @@ jobs:
           permission-issues: 'write'
 
       - name: 'Process Stale Issues'
-        uses: 'actions/github-script@v8'
+        uses: 'actions/github-script@e5b00c2b292669c4b1190f43015b1b95cb59fc87' # ratchet:actions/github-script@v8
         env:
           DRY_RUN: '${{ inputs.dry_run }}'
         with:
