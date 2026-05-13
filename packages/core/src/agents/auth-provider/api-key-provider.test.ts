@@ -6,10 +6,19 @@
 
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { ApiKeyAuthProvider } from './api-key-provider.js';
+import { debugLogger } from '../../utils/debugLogger.js';
+
+vi.mock('../../utils/debugLogger.js', () => ({
+  debugLogger: {
+    debug: vi.fn(),
+    warn: vi.fn(),
+  },
+}));
 
 describe('ApiKeyAuthProvider', () => {
   afterEach(() => {
     vi.unstubAllEnvs();
+    vi.clearAllMocks();
   });
 
   describe('initialization', () => {
@@ -75,6 +84,49 @@ describe('ApiKeyAuthProvider', () => {
       const provider = new ApiKeyAuthProvider({
         type: 'apiKey',
         key: 'my-key',
+      });
+      await provider.initialize();
+
+      const headers = await provider.headers();
+      expect(headers).toEqual({ 'X-API-Key': 'my-key' });
+    });
+
+    it('should support cookie location', async () => {
+      const provider = new ApiKeyAuthProvider({
+        type: 'apiKey',
+        key: 'my-cookie-key',
+        in: 'cookie',
+        name: 'session_id',
+      });
+      await provider.initialize();
+
+      const headers = await provider.headers();
+      expect(headers).toEqual({ Cookie: 'session_id=my-cookie-key' });
+    });
+
+    it('should return empty headers and warn for query location', async () => {
+      const provider = new ApiKeyAuthProvider({
+        type: 'apiKey',
+        key: 'my-query-key',
+        in: 'query',
+        name: 'api_key',
+      });
+      await provider.initialize();
+
+      const headers = await provider.headers();
+      expect(headers).toEqual({});
+      expect(debugLogger.warn).toHaveBeenCalledWith(
+        expect.stringContaining(
+          "'query' location was requested for API key 'api_key'",
+        ),
+      );
+    });
+
+    it('should default to header location if in is missing', async () => {
+      const provider = new ApiKeyAuthProvider({
+        type: 'apiKey',
+        key: 'my-key',
+        name: 'X-API-Key',
       });
       await provider.initialize();
 

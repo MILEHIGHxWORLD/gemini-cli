@@ -214,13 +214,14 @@ For `apiKey` and `http` auth types, secret values (`key`, `token`, `username`,
 
 ### API key (`apiKey`)
 
-Sends an API key as an HTTP header on every request.
+Sends an API key as an HTTP header, query parameter, or cookie on every request.
 
 | Field  | Type   | Required | Description                                           |
 | :----- | :----- | :------- | :---------------------------------------------------- |
 | `type` | string | Yes      | Must be `apiKey`.                                     |
 | `key`  | string | Yes      | The API key value. Supports dynamic values.           |
-| `name` | string | No       | Header name to send the key in. Default: `X-API-Key`. |
+| `in`   | string | No       | The location of the API key (`header`, `query`, or `cookie`). Default: `header`. |
+| `name` | string | No       | The name of the header, query parameter, or cookie. Default: `X-API-Key` (for header). |
 
 ```yaml
 ---

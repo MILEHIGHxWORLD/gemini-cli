@@ -25,11 +25,11 @@ export class ApiKeyAuthProvider extends BaseA2AAuthProvider {
   readonly type = 'apiKey' as const;
 
   private resolvedKey: string | undefined;
-  private readonly headerName: string;
+  private readonly name: string;
 
   constructor(private readonly config: ApiKeyAuthConfig) {
     super();
-    this.headerName = config.name ?? DEFAULT_HEADER_NAME;
+    this.name = config.name ?? DEFAULT_HEADER_NAME;
   }
 
   override async initialize(): Promise<void> {
@@ -49,7 +49,21 @@ export class ApiKeyAuthProvider extends BaseA2AAuthProvider {
         'ApiKeyAuthProvider not initialized. Call initialize() first.',
       );
     }
-    return { [this.headerName]: this.resolvedKey };
+    const location = this.config.in ?? 'header';
+    if (location === 'header') {
+      return { [this.name]: this.resolvedKey };
+    }
+    if (location === 'cookie') {
+      return { Cookie: `${this.name}=${this.resolvedKey}` };
+    }
+    if (location === 'query') {
+      // TODO: Query parameter auth is not yet supported by the SDK's AuthenticationHandler.
+      debugLogger.warn(
+        `[ApiKeyAuthProvider] 'query' location was requested for API key '${this.name}', but is not yet supported by the underlying transport.`,
+      );
+      return {};
+    }
+    return { [this.name]: this.resolvedKey };
   }
 
   /**
