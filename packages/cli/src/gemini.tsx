@@ -46,7 +46,6 @@ import { start_sandbox } from './utils/sandbox.js';
 import {
   loadSettings,
   SettingScope,
-  type DnsResolutionOrder,
   type LoadedSettings,
 } from './config/settings.js';
 import {
@@ -92,24 +91,8 @@ import { isAlternateBufferEnabled } from './ui/hooks/useAlternateBuffer.js';
 import { setupTerminalAndTheme } from './utils/terminalTheme.js';
 import { runDeferredCommand } from './deferred.js';
 import { cleanupBackgroundLogs } from './utils/logCleanup.js';
+import { validateDnsResolutionOrder } from './utils/dns.js';
 import { SlashCommandConflictHandler } from './services/SlashCommandConflictHandler.js';
-
-export function validateDnsResolutionOrder(
-  order: string | undefined,
-): DnsResolutionOrder {
-  const defaultValue: DnsResolutionOrder = 'ipv4first';
-  if (order === undefined) {
-    return defaultValue;
-  }
-  if (order === 'ipv4first' || order === 'verbatim') {
-    return order;
-  }
-  // We don't want to throw here, just warn and use the default.
-  debugLogger.warn(
-    `Invalid value for dnsResolutionOrder in settings: "${order}". Using default "${defaultValue}".`,
-  );
-  return defaultValue;
-}
 
 export function getNodeMemoryArgs(isDebugMode: boolean): string[] {
   const totalMemoryMB = os.totalmem() / (1024 * 1024);
