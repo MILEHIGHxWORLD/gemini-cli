@@ -504,6 +504,22 @@ describe('A2AAuthProviderFactory', () => {
       expect(headers).toEqual({ 'X-API-Key': 'factory-test-key' });
     });
 
+    it('should create an ApiKeyAuthProvider for apiKey config with cookie location', async () => {
+      const provider = await A2AAuthProviderFactory.create({
+        authConfig: {
+          type: 'apiKey',
+          key: 'factory-cookie-key',
+          in: 'cookie',
+          name: 'session_id',
+        },
+      });
+
+      expect(provider).toBeDefined();
+      expect(provider!.type).toBe('apiKey');
+      const headers = await provider!.headers();
+      expect(headers).toEqual({ Cookie: 'session_id=factory-cookie-key' });
+    });
+
     it('should create an OAuth2AuthProvider for oauth2 config', async () => {
       const provider = await A2AAuthProviderFactory.create({
         agentName: 'my-oauth-agent',
