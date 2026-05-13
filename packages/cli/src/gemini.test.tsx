@@ -17,7 +17,6 @@ import {
 import {
   main,
   setupUnhandledRejectionHandler,
-  validateDnsResolutionOrder,
   startInteractiveUI,
   getNodeMemoryArgs,
 } from './gemini.js';
@@ -1221,42 +1220,6 @@ describe('gemini.tsx main function exit codes', () => {
     }
 
     expect(refreshAuthSpy).toHaveBeenCalledWith(AuthType.USE_GEMINI);
-  });
-});
-
-describe('validateDnsResolutionOrder', () => {
-  let debugLoggerWarnSpy: ReturnType<typeof vi.spyOn>;
-
-  beforeEach(() => {
-    debugLoggerWarnSpy = vi
-      .spyOn(debugLogger, 'warn')
-      .mockImplementation(() => {});
-  });
-
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
-
-  it('should return "ipv4first" when the input is "ipv4first"', () => {
-    expect(validateDnsResolutionOrder('ipv4first')).toBe('ipv4first');
-    expect(debugLoggerWarnSpy).not.toHaveBeenCalled();
-  });
-
-  it('should return "verbatim" when the input is "verbatim"', () => {
-    expect(validateDnsResolutionOrder('verbatim')).toBe('verbatim');
-    expect(debugLoggerWarnSpy).not.toHaveBeenCalled();
-  });
-
-  it('should return the default "ipv4first" when the input is undefined', () => {
-    expect(validateDnsResolutionOrder(undefined)).toBe('ipv4first');
-    expect(debugLoggerWarnSpy).not.toHaveBeenCalled();
-  });
-
-  it('should return the default "ipv4first" and log a warning for an invalid string', () => {
-    expect(validateDnsResolutionOrder('invalid-value')).toBe('ipv4first');
-    expect(debugLoggerWarnSpy).toHaveBeenCalledExactlyOnceWith(
-      'Invalid value for dnsResolutionOrder in settings: "invalid-value". Using default "ipv4first".',
-    );
   });
 });
 
