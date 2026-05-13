@@ -54,6 +54,7 @@ describe('billing', () => {
       // The continue URL should contain the G1 activity path and UTM params
       expect(result).toContain('one.google.com%2Fai%2Factivity');
       expect(result).toContain('utm_source%3Dgemini_cli');
+      expect(result).toContain('utm_medium%3Ddesktop');
       expect(result).toContain(
         'utm_campaign%3Dhydrogen_cli_settings_ai_credits_activity_page',
       );
