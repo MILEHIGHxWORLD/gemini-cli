@@ -46,7 +46,6 @@ import { start_sandbox } from './utils/sandbox.js';
 import {
   loadSettings,
   SettingScope,
-  type DnsResolutionOrder,
   type LoadedSettings,
 } from './config/settings.js';
 import {
