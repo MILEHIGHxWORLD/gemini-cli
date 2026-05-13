@@ -91,7 +91,7 @@ import { isAlternateBufferEnabled } from './ui/hooks/useAlternateBuffer.js';
 import { setupTerminalAndTheme } from './utils/terminalTheme.js';
 import { runDeferredCommand } from './deferred.js';
 import { cleanupBackgroundLogs } from './utils/logCleanup.js';
-import { validateDnsResolutionOrder } from "./utils/dns.js";
+import { validateDnsResolutionOrder } from './utils/dns.js';
 import { SlashCommandConflictHandler } from './services/SlashCommandConflictHandler.js';
 
 export function getNodeMemoryArgs(isDebugMode: boolean): string[] {
