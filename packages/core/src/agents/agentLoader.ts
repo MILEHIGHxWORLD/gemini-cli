@@ -98,6 +98,7 @@ const apiKeyAuthSchema = z.object({
   ...baseAuthFields,
   type: z.literal('apiKey'),
   key: z.string().min(1, 'API key is required'),
+  in: z.enum(['header', 'query', 'cookie']).optional(),
   name: z.string().optional(),
 });
 
@@ -390,6 +391,7 @@ function convertFrontmatterAuthToConfig(
       return {
         type: 'apiKey',
         key: frontmatter.key,
+        in: frontmatter.in,
         name: frontmatter.name,
       };
 
