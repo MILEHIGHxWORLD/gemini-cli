@@ -1048,4 +1048,59 @@ describe('sandbox', () => {
       );
     });
   });
+
+  describe('proxy configuration', () => {
+    it('should securely spawn proxy process in macOS seatbelt', async () => {
+      vi.mocked(os.platform).mockReturnValue('darwin');
+      process.env['GEMINI_SANDBOX_PROXY_COMMAND'] = 'proxy-cmd --arg1 val1';
+      const config: SandboxConfig = createMockSandboxConfig({
+        command: 'sandbox-exec',
+      });
+
+      interface MockProcess extends EventEmitter {
+        stdout: EventEmitter;
+        stderr: EventEmitter;
+        pid: number;
+      }
+      const mockProxyProcess = new EventEmitter() as MockProcess;
+      mockProxyProcess.stdout = new EventEmitter();
+      mockProxyProcess.stderr = new EventEmitter();
+      mockProxyProcess.pid = 123;
+
+      const mockSandboxProcess = new EventEmitter() as MockProcess;
+      mockSandboxProcess.stdout = new EventEmitter();
+      mockSandboxProcess.stderr = new EventEmitter();
+
+      vi.mocked(spawn).mockImplementation((cmd, args, options) => {
+        if (cmd === 'proxy-cmd') {
+          return mockProxyProcess as any;
+        }
+        if (cmd === 'sandbox-exec') {
+          return mockSandboxProcess as any;
+        }
+        return new EventEmitter() as any;
+      });
+
+      const promise = start_sandbox(config);
+
+      // We need to trigger the proxy "start" detection which is a curl call in start_sandbox
+      // Actually start_sandbox waits for curl to succeed.
+      // In the mock, execAsync is mocked to return success for curl.
+
+      setTimeout(() => {
+        mockSandboxProcess.emit('close', 0);
+      }, 50);
+
+      await promise;
+
+      expect(spawn).toHaveBeenCalledWith(
+        'proxy-cmd',
+        ['--arg1', 'val1'],
+        expect.objectContaining({
+          shell: false,
+          detached: true,
+        }),
+      );
+    });
+  });
 });
