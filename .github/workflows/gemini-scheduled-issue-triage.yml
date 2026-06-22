@@ -52,7 +52,7 @@ jobs:
       - name: 'Sync Issue Types'
         if: |-
           ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
-        uses: 'actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea'
+        uses: 'actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3'
         with:
           github-token: '${{ steps.generate_token.outputs.token }}'
           script: |-
@@ -62,7 +62,7 @@ jobs:
       - name: 'Find Issues with Conflicting Labels'
         if: |-
           ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
-        uses: 'actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea'
+        uses: 'actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3'
         with:
           github-token: '${{ steps.generate_token.outputs.token }}'
           script: |-
@@ -133,7 +133,7 @@ jobs:
 
       - name: 'Get Repository Labels'
         id: 'get_labels'
-        uses: 'actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea'
+        uses: 'actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3'
         with:
           github-token: '${{ steps.generate_token.outputs.token }}'
           script: |-
@@ -388,7 +388,7 @@ jobs:
           REPOSITORY: '${{ github.repository }}'
           LABELS_OUTPUT: '${{ steps.gemini_standard_issue_analysis.outputs.summary }}'
           SUPPRESS_COMMENT: 'true'
-        uses: 'actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea'
+        uses: 'actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3'
         with:
           github-token: '${{ steps.generate_token.outputs.token }}'
           script: |-
@@ -403,7 +403,7 @@ jobs:
         env:
           REPOSITORY: '${{ github.repository }}'
           LABELS_OUTPUT: '${{ steps.gemini_effort_issue_analysis.outputs.summary }}'
-        uses: 'actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea'
+        uses: 'actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3'
         with:
           github-token: '${{ steps.generate_token.outputs.token }}'
           script: |-
@@ -413,7 +413,7 @@ jobs:
       - name: 'Sync Issue Types (Post-Analysis)'
         if: |-
           always() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
-        uses: 'actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea'
+        uses: 'actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3'
         with:
           github-token: '${{ steps.generate_token.outputs.token }}'
           script: |-
@@ -435,7 +435,7 @@ jobs:
       - name: 'Clean Up Triage Labels'
         if: |-
           always() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
-        uses: 'actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea'
+        uses: 'actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3'
         with:
           github-token: '${{ steps.generate_token.outputs.token }}'
           script: |-
