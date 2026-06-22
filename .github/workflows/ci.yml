@@ -375,7 +375,7 @@ jobs:
           ref: '${{ github.event.inputs.branch_ref || github.ref }}'
           fetch-depth: 1
 
-      - uses: 'preactjs/compressed-size-action@66325aad6443cb7cf89c4bfcd414aea2367cda94'
+      - uses: 'preactjs/compressed-size-action@f322c295dde06a1cb7ccaef105732dd8a726d1d9'
         with:
           repo-token: '${{ secrets.GITHUB_TOKEN }}'
           pattern: './bundle/**/*.{js,sb}'
